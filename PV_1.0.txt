@@ -1,0 +1,134 @@
+#include <iostream>
+#include<iomanip>
+using namespace std;
+int v = 0;
+int l = 0,g = 0;
+int y = 1;
+int le = 0;
+struct Progress
+{
+	char a[5];
+	int NO;//优先级
+	int w_time;//需要工作时间
+	int hour = 0 ;//已经工作时间
+	char statu = 'W';//进程状态
+	int a_time;//到达时间
+};
+void ADD(struct Progress A[] ,int len)
+{
+	cout << "请输入优先级　需要时间　到达时间　";
+	cin >> A[len].NO >> A[len].w_time >> A[len].a_time;
+	cout << "给作业取个作业的名字吧：";
+	cin >> A[len].a;
+
+}
+void Sort(Progress A[], int len)
+{
+	if (A[0].statu == 'F')
+	{
+		Progress B = A[0];
+		A[0] = A[len-1];
+		A[len-1] = B;
+		le--;
+	}
+	for (int i = 0; i < len; i++)
+	{
+		for (int j = i+1; j < len; j++)
+		{
+			if (A[i].NO == A[j].NO)
+				if (A[i].a_time > A[j].a_time)
+				{
+					Progress B = A[i];
+					A[i] = A[j];
+					A[j] = B;
+				}
+			if (A[i].NO < A[j].NO)
+			{
+				Progress B = A[i];
+				A[i] = A[j];
+				A[j] = B;
+			}
+
+		}
+	}
+}
+void Caculte(Progress A[], int len)
+{
+	if (l&&(A[0].statu!= 'F'))
+	{
+		int i = 0;
+		A[i].NO--;
+		A[i].w_time -= 3;
+		A[i].hour += 3;
+		if (A[0].w_time <= 0)
+			A[0].statu = 'F';
+		
+	}
+	else
+	{
+		A[0].NO = 0;
+	}
+	l++;
+	
+
+}
+void Print(Progress A[],int len)
+{
+	if (A[0].statu != 'F')
+		A[0].statu = 'R';
+	for (int i = 0; i < len; i++)
+	{
+		cout << setw(10) << setiosflags(ios::left)<<A[i].a<< setw(10) << setiosflags(ios::left) << A[i].NO << setw(10) << setiosflags(ios::left) << A[i].a_time << setw(10) << setiosflags(ios::left) << A[i].w_time << setw(10) << setiosflags(ios::left) << A[i].hour << setw(10) << setiosflags(ios::left) << A[i].statu << endl;
+	}
+}
+void main()
+{
+
+	Progress working[6];
+	
+	int a ,b;
+	
+	int c = 0;//计数器
+	//cout << "请输入预计的大小"
+	cout << "请输入时间片大小：";
+	cin >> b;
+	int p = 1;
+	while (p)
+	{
+		cout << " '1'代表的是添加进程\n" << " '2'代表的是打印功能\n" << " '3' 代表的是结束退出程序\n" << "请输入序号";
+		cin >> a;
+		switch (a)
+		{
+		case 1:
+			ADD(working, le);
+			le++;
+			g = le;
+			break;
+		case 2:
+			
+			while (v != 1)
+			{
+				Sort(working, le);
+				Caculte(working, le);
+				
+				cout << "作业名称 " << "作业优先级 " << "到达时间 " << "所需时间 " << "以做时间 " << "进程状态 " << endl;
+				Print(working, g);
+				if (working[0].w_time<=0)
+				{
+					working[0].statu = 'F'; 
+					if (y==g)
+						v =1;
+					y++;
+				}
+				else
+					working[0].statu = 'W';
+			}
+			break;
+		case 3:
+			p = 0;
+		}
+	}
+	
+		
+
+}
